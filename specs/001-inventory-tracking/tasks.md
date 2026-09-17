@@ -28,7 +28,7 @@ implemented and tested independently.
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per plan.md: `app/` (with `routers/`, `templates/`, `static/`) and `tests/` (with `contract/`, `integration/`, `unit/`) at repository root
+- [ ] T001 Create project structure per plan.md: `app/` (with `routers/`, `templates/`, `static/`) at repository root — no `tests/` scaffolding, since no automated test suite was requested (see plan.md Technical Context)
 - [ ] T002 Initialize Python 3.11+ project with a `requirements.txt` pinning FastAPI, Uvicorn, SQLAlchemy, Jinja2, `python-multipart`, and `passlib[bcrypt]` (for Admin password hashing) per research.md
 - [ ] T003 [P] Configure linting/formatting (e.g. `ruff` + `black` config) for the `app/` package
 

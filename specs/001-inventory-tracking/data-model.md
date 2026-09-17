@@ -22,10 +22,12 @@ Represents a physical storage location in the warehouse.
 
 **Validation rules**:
 - `capacity` must be a positive integer (edge case: editing capacity below
-  current `used_capacity` is allowed, but `remaining_capacity` becomes
-  negative and the rack MUST be flagged as over capacity rather than the
-  edit being silently rejected — the Admin made the edit intentionally, e.g.
-  to correct a data-entry mistake).
+  current `used_capacity` is allowed rather than rejected — the Admin made
+  the edit intentionally, e.g. to correct a data-entry mistake. This simply
+  makes `remaining_capacity` negative; per FR-005, the Admin is warned the
+  next time an assignment to that rack would exceed it, matching the spec's
+  requirements exactly rather than introducing a separate persistent
+  over-capacity flag).
 
 ## Item
 

@@ -24,7 +24,7 @@ templates), Uvicorn (ASGI server), SQLAlchemy (ORM)
 
 **Storage**: SQLite (single file, no separate database server to run/maintain)
 
-**Testing**: pytest, with FastAPI's `TestClient` for HTTP-level contract/integration tests
+**Testing**: No automated test suite requested in spec.md; manual validation via `quickstart.md`'s scenarios is the verification method for this feature
 
 **Target Platform**: A single machine (desktop or small local server) in the
 warehouse office; accessed via a browser over the local network. No cloud
@@ -88,11 +88,6 @@ app/
 │   └── report.py        # Inventory report (item name, rack number, quantity)
 ├── templates/           # Jinja2 templates (racks, items, report, login)
 └── static/              # CSS/minimal JS
-
-tests/
-├── contract/            # HTTP-level tests against each router's endpoints
-├── integration/         # End-to-end scenarios from spec's Acceptance Scenarios
-└── unit/                # Rack capacity math, validation rules
 ```
 
 **Structure Decision**: Single project (Option 1 — no separate frontend/backend
