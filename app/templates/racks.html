@@ -17,7 +17,7 @@
   <tbody id="racks-body">
     {% for rack in racks %}
     <tr data-rack-id="{{ rack.id }}" class="{{ 'rack-full' if rack.remaining_capacity <= 0 else '' }}">
-      <td>{{ rack.rack_number }}</td>
+      <td><input type="text" class="rack-number-input" value="{{ rack.rack_number }}" required></td>
       <td><input type="text" class="rack-aisle-input" value="{{ rack.aisle }}" required></td>
       <td><input type="number" class="rack-capacity-input" value="{{ rack.capacity }}" min="1" required></td>
       <td>{{ rack.used_capacity }}</td>
@@ -75,15 +75,18 @@
     btn.addEventListener('click', async () => {
       const row = btn.closest('tr');
       const rackId = btn.dataset.rackId;
+      const rack_number = row.querySelector('.rack-number-input').value;
       const aisle = row.querySelector('.rack-aisle-input').value;
       const capacity = Number(row.querySelector('.rack-capacity-input').value);
       const res = await fetch(`/racks/${rackId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ aisle, capacity }),
+        body: JSON.stringify({ rack_number, aisle, capacity }),
       });
       if (res.ok) {
         window.location.reload();
+      } else if (res.status === 409) {
+        flash('That rack number is already used by another rack.', true);
       } else {
         flash('Could not update rack.', true);
       }

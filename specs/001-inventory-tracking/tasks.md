@@ -126,9 +126,9 @@ in the report (FR-007/SC-002 updates)
 **Purpose**: FR-001 update — let the Admin rename a rack's `rack_number` from
 the Racks page, not just set it at creation
 
-- [ ] T032 Add `rack_number` to `RackUpdate` in `app/routers/racks.py`; in `update_rack`, if changing it, check for a conflicting rack (409, same rule as create) before applying, per the updated contracts/api.md
-- [ ] T033 [P] Update `app/templates/racks.html`: make the Rack Number cell an editable input (like aisle/capacity already are) and include it in the save request
-- [ ] T034 Manually verify: rename a rack to a free number (succeeds), rename a rack to another existing rack's number (rejected, both racks keep their original numbers), and confirm the report/items dropdown reflect the new number afterward
+- [X] T032 Add `rack_number` to `RackUpdate` in `app/routers/racks.py`; in `update_rack`, if changing it, check for a conflicting rack (409, same rule as create) before applying, per the updated contracts/api.md
+- [X] T033 [P] Update `app/templates/racks.html`: make the Rack Number cell an editable input (like aisle/capacity already are) and include it in the save request
+- [X] T034 Manually verify: rename a rack to a free number (succeeds), rename a rack to another existing rack's number (rejected, both racks keep their original numbers), and confirm the report/items dropdown reflect the new number afterward — all verified against the running instance
 
 **Checkpoint**: Rack number is editable from the Racks page, with the same uniqueness guarantee as creation
 

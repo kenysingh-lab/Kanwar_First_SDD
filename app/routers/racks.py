@@ -22,6 +22,7 @@ class RackCreate(BaseModel):
 
 
 class RackUpdate(BaseModel):
+    rack_number: str | None = Field(default=None, min_length=1)
     aisle: str | None = Field(default=None, min_length=1)
     capacity: int | None = Field(default=None, gt=0)
 
@@ -64,6 +65,11 @@ def update_rack(
     rack = db.get(Rack, rack_id)
     if rack is None:
         raise HTTPException(status_code=404, detail="Rack not found")
+    if payload.rack_number is not None and payload.rack_number != rack.rack_number:
+        conflict = db.query(Rack).filter(Rack.rack_number == payload.rack_number).first()
+        if conflict is not None:
+            raise HTTPException(status_code=409, detail="rack_number already exists")
+        rack.rack_number = payload.rack_number
     if payload.aisle is not None:
         rack.aisle = payload.aisle
     if payload.capacity is not None:
