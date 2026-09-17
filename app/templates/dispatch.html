@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dispatch — Warehouse Inventory{% endblock %}
+{% block content %}
+<h1>Dispatch</h1>
+
+{% if items %}
+<form id="dispatch-form" class="card">
+  <label>
+    Item
+    <select name="item_id" required>
+      {% for item in items %}
+      <option value="{{ item.id }}">{{ item.name }} — {{ item.rack_number }} ({{ item.quantity }} available)</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>
+    Quantity to dispatch
+    <input type="number" name="quantity" min="1" required>
+  </label>
+  <button type="submit">Dispatch</button>
+  <p id="dispatch-error" class="error-text" hidden></p>
+</form>
+{% else %}
+<p class="empty-state">No items to dispatch yet — add items first.</p>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const form = document.getElementById('dispatch-form');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById('dispatch-error');
+      errorEl.hidden = true;
+      const res = await fetch('/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          item_id: Number(form.item_id.value),
+          quantity: Number(form.quantity.value),
+        }),
+      });
+      if (res.ok) {
+        window.location.reload();
+      } else if (res.status === 409) {
+        const data = await res.json();
+        errorEl.textContent = data.error;
+        errorEl.hidden = false;
+      } else {
+        flash('Could not dispatch — check the values entered.', true);
+      }
+    });
+  }
+</script>
+{% endblock %}

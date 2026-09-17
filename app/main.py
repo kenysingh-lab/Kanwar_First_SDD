@@ -19,6 +19,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from . import auth
 from .database import get_db
 from .models import Admin, Item, Rack
+from .routers import dispatch as dispatch_router
 from .routers import items as items_router
 from .routers import racks as racks_router
 from .routers import report as report_router
@@ -39,6 +40,7 @@ app.include_router(auth.router)
 app.include_router(racks_router.router)
 app.include_router(items_router.router)
 app.include_router(report_router.router)
+app.include_router(dispatch_router.router)
 
 
 def _session_admin(request: Request, db: Session) -> Admin | None:
@@ -100,4 +102,22 @@ def report_page(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         "report.html",
         {"request": request, "rows": report_router.query_report_rows(db)},
+    )
+
+
+@app.get("/ui/dispatch")
+def dispatch_page(request: Request, db: Session = Depends(get_db)):
+    admin = _session_admin(request, db)
+    if admin is None:
+        return RedirectResponse("/ui/login")
+    all_items = db.query(Item).order_by(Item.name).all()
+    return templates.TemplateResponse(
+        "dispatch.html",
+        {
+            "request": request,
+            "items": [
+                {**items_router.serialize_item(i), "rack_number": i.rack.rack_number}
+                for i in all_items
+            ],
+        },
     )
