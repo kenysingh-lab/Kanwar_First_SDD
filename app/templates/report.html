@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Report — Warehouse Inventory{% endblock %}
+{% block content %}
+<h1>Inventory Report</h1>
+
+{% if rows %}
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Item name</th>
+      <th>Rack number</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.item_name }}</td>
+      <td>{{ row.rack_number }}</td>
+      <td>{{ row.quantity }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-state">No inventory recorded yet. Add racks and items to see them here.</p>
+{% endif %}
+{% endblock %}

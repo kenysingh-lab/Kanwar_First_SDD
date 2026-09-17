@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Warehouse Inventory{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="topnav">
+    <span class="brand">Warehouse Inventory</span>
+    <a href="/ui/racks">Racks</a>
+    <a href="/ui/items">Items</a>
+    <a href="/ui/report">Report</a>
+    <button id="logout-btn" class="link-btn">Log out</button>
+  </nav>
+  <main>
+    <div id="flash" class="flash" hidden></div>
+    {% block content %}{% endblock %}
+  </main>
+  <script>
+    function flash(message, isError) {
+      const el = document.getElementById('flash');
+      el.textContent = message;
+      el.hidden = false;
+      el.className = 'flash ' + (isError ? 'flash-error' : 'flash-ok');
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/ui/login';
+    });
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

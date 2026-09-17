@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in — Warehouse Inventory</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="login-main">
+    <form id="login-form" class="card login-card">
+      <h1>Warehouse Inventory</h1>
+      <label>
+        Username
+        <input type="text" name="username" required autofocus>
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit">Log in</button>
+      <p id="login-error" class="error-text" hidden></p>
+    </form>
+  </main>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const errorEl = document.getElementById('login-error');
+      errorEl.hidden = true;
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: form.username.value,
+          password: form.password.value,
+        }),
+      });
+      if (res.ok) {
+        window.location.href = '/ui/racks';
+      } else {
+        errorEl.textContent = 'Invalid username or password.';
+        errorEl.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>

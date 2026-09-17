@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Items — Warehouse Inventory{% endblock %}
+{% block content %}
+<h1>Items</h1>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Item name</th>
+      <th>Rack</th>
+      <th>Quantity</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="items-body">
+    {% for item in items %}
+    <tr data-item-id="{{ item.id }}">
+      <td>{{ item.name }}</td>
+      <td>{{ item.rack_number }}</td>
+      <td>
+        <form class="inline-form edit-quantity-form" data-item-id="{{ item.id }}">
+          <input type="number" name="quantity" value="{{ item.quantity }}" min="0" required>
+          <button type="submit">Save</button>
+        </form>
+      </td>
+      <td>
+        <button class="delete-item-btn" data-item-id="{{ item.id }}">Remove</button>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4" class="empty-state">No items yet — add one below.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Add an item</h2>
+<form id="add-item-form" class="card">
+  <label>
+    Item name
+    <input type="text" name="name" required>
+  </label>
+  <label>
+    Rack
+    <select name="rack_id" required>
+      {% for rack in racks %}
+      <option value="{{ rack.id }}">{{ rack.rack_number }} ({{ rack.remaining_capacity }} remaining)</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>
+    Quantity
+    <input type="number" name="quantity" min="0" required>
+  </label>
+  <button type="submit">Add item</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function submitItemChange(url, method, body) {
+    let res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (res.status === 409) {
+      const data = await res.json();
+      const proceed = confirm(
+        `This rack only has ${data.remaining_capacity} unit(s) of space left. ` +
+        `Assign anyway?`
+      );
+      if (!proceed) {
+        return { ok: false, cancelled: true };
+      }
+      res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...body, confirm: true }),
+      });
+    }
+    return { ok: res.ok, cancelled: false, res };
+  }
+
+  document.getElementById('add-item-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const result = await submitItemChange('/items', 'POST', {
+      name: form.name.value,
+      quantity: Number(form.quantity.value),
+      rack_id: Number(form.rack_id.value),
+    });
+    if (result.ok) {
+      window.location.reload();
+    } else if (!result.cancelled) {
+      flash('Could not add item — check the values entered.', true);
+    }
+  });
+
+  document.querySelectorAll('.edit-quantity-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const itemId = form.dataset.itemId;
+      const result = await submitItemChange(`/items/${itemId}`, 'PATCH', {
+        quantity: Number(form.quantity.value),
+      });
+      if (result.ok) {
+        window.location.reload();
+      } else if (!result.cancelled) {
+        flash('Could not update quantity.', true);
+      }
+    });
+  });
+
+  document.querySelectorAll('.delete-item-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Remove this item entirely?')) return;
+      const itemId = btn.dataset.itemId;
+      const res = await fetch(`/items/${itemId}`, { method: 'DELETE' });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        flash('Could not remove item.', true);
+      }
+    });
+  });
+</script>
+{% endblock %}

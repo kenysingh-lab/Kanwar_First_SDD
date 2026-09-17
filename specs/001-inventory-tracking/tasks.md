@@ -28,9 +28,9 @@ implemented and tested independently.
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per plan.md: `app/` (with `routers/`, `templates/`, `static/`) at repository root — no `tests/` scaffolding, since no automated test suite was requested (see plan.md Technical Context)
-- [ ] T002 Initialize Python 3.11+ project with a `requirements.txt` pinning FastAPI, Uvicorn, SQLAlchemy, Jinja2, `python-multipart`, and `passlib[bcrypt]` (for Admin password hashing) per research.md
-- [ ] T003 [P] Configure linting/formatting (e.g. `ruff` + `black` config) for the `app/` package
+- [X] T001 Create project structure per plan.md: `app/` (with `routers/`, `templates/`, `static/`) at repository root — no `tests/` scaffolding, since no automated test suite was requested (see plan.md Technical Context)
+- [X] T002 Initialize Python 3.11+ project with a `requirements.txt` pinning FastAPI, Uvicorn, SQLAlchemy, Jinja2, `python-multipart`, and `passlib[bcrypt]` (for Admin password hashing) per research.md
+- [X] T003 [P] Configure linting/formatting (e.g. `ruff` + `black` config) for the `app/` package
 
 ---
 
@@ -40,12 +40,12 @@ implemented and tested independently.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Set up SQLAlchemy engine and session factory against a SQLite file in `app/database.py`, plus a `python -m app.database init` bootstrap command that creates the tables (per quickstart.md Setup)
-- [ ] T005 [P] Create the `Rack` ORM model in `app/models.py` with fields `rack_number` (string, "unique, required"), `capacity` (integer, "required, must be > 0"), `created_at`, `updated_at` per data-model.md
-- [ ] T006 [P] Create the `Item` ORM model in `app/models.py` with fields `name` (string, required), `quantity` (integer, "required, must be >= 0"), `rack_id` (FK to `Rack`, required, not nullable), `created_at`, `updated_at` per data-model.md
-- [ ] T007 [P] Create the `Admin` ORM model in `app/models.py` with fields `username` (string, "unique, required"), `password_hash` (string, "required, never stored/returned in plaintext"), `created_at` per data-model.md
-- [ ] T008 Implement session-based auth in `app/auth.py`: `POST /login` (sets session cookie, 401 on invalid credentials), `POST /logout` (clears cookie), and a `current_admin` dependency so "Only authenticated Admins can reach any Rack/Item/report endpoint" (FR-009), per contracts/api.md
-- [ ] T009 Wire up the FastAPI app instance, router registration, Jinja2 template config, and static file serving in `app/main.py` per plan.md's Project Structure
+- [X] T004 Set up SQLAlchemy engine and session factory against a SQLite file in `app/database.py`, plus a `python -m app.database init` bootstrap command that creates the tables (per quickstart.md Setup)
+- [X] T005 [P] Create the `Rack` ORM model in `app/models.py` with fields `rack_number` (string, "unique, required"), `capacity` (integer, "required, must be > 0"), `created_at`, `updated_at` per data-model.md
+- [X] T006 [P] Create the `Item` ORM model in `app/models.py` with fields `name` (string, required), `quantity` (integer, "required, must be >= 0"), `rack_id` (FK to `Rack`, required, not nullable), `created_at`, `updated_at` per data-model.md
+- [X] T007 [P] Create the `Admin` ORM model in `app/models.py` with fields `username` (string, "unique, required"), `password_hash` (string, "required, never stored/returned in plaintext"), `created_at` per data-model.md
+- [X] T008 Implement session-based auth in `app/auth.py`: `POST /login` (sets session cookie, 401 on invalid credentials), `POST /logout` (clears cookie), and a `current_admin` dependency so "Only authenticated Admins can reach any Rack/Item/report endpoint" (FR-009), per contracts/api.md
+- [X] T009 Wire up the FastAPI app instance, router registration, Jinja2 template config, and static file serving in `app/main.py` per plan.md's Project Structure
 
 **Checkpoint**: Foundation ready — user story implementation can now begin
 
@@ -63,14 +63,14 @@ capacity — including warning before an assignment would overflow the rack
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement rack capacity calculation in `app/routers/racks.py`: `used_capacity` = "sum of `quantity` across all `Item` rows where `rack_id` matches this rack", `remaining_capacity` = `capacity` - `used_capacity`, per data-model.md
-- [ ] T011 [US1] Implement `GET /racks` and `POST /racks` in `app/routers/racks.py` per contracts/api.md (409 if `rack_number` already exists, 422 if `capacity` is not a positive integer)
-- [ ] T012 [US1] Implement `PATCH /racks/{id}` in `app/routers/racks.py` per contracts/api.md, recomputing `used_capacity`/`remaining_capacity` after a capacity edit (404 if rack not found)
-- [ ] T013 [US1] Implement `POST /items` and `PATCH /items/{id}` in `app/routers/items.py` per contracts/api.md, including the capacity-warning soft-block: return 409 with `{"warning": "capacity_exceeded", "remaining_capacity": int}` when an assignment/update would exceed the target rack's remaining capacity, and honor `{"confirm": true}` to force it (FR-005)
-- [ ] T014 [US1] Implement `GET /items` (with optional `rack_id` filter) and `DELETE /items/{id}` in `app/routers/items.py` per contracts/api.md and FR-010 (remove an item entirely, freeing the rack capacity it used)
-- [ ] T015 [US1] Add validation guard rails across `app/routers/racks.py` and `app/routers/items.py` so quantity/capacity "cannot be negative" (FR-006) and rack `capacity` "must be a positive integer" are enforced with 422 responses
-- [ ] T016 [P] [US1] Build rack list/detail templates in `app/templates/racks.html` showing capacity used/remaining per rack, wired to the `GET`/`POST`/`PATCH /racks` endpoints
-- [ ] T017 [P] [US1] Build item add/edit forms in `app/templates/items.html`, including the capacity-warning confirmation flow, wired to the items endpoints
+- [X] T010 [US1] Implement rack capacity calculation in `app/routers/racks.py`: `used_capacity` = "sum of `quantity` across all `Item` rows where `rack_id` matches this rack", `remaining_capacity` = `capacity` - `used_capacity`, per data-model.md
+- [X] T011 [US1] Implement `GET /racks` and `POST /racks` in `app/routers/racks.py` per contracts/api.md (409 if `rack_number` already exists, 422 if `capacity` is not a positive integer)
+- [X] T012 [US1] Implement `PATCH /racks/{id}` in `app/routers/racks.py` per contracts/api.md, recomputing `used_capacity`/`remaining_capacity` after a capacity edit (404 if rack not found)
+- [X] T013 [US1] Implement `POST /items` and `PATCH /items/{id}` in `app/routers/items.py` per contracts/api.md, including the capacity-warning soft-block: return 409 with `{"warning": "capacity_exceeded", "remaining_capacity": int}` when an assignment/update would exceed the target rack's remaining capacity, and honor `{"confirm": true}` to force it (FR-005)
+- [X] T014 [US1] Implement `GET /items` (with optional `rack_id` filter) and `DELETE /items/{id}` in `app/routers/items.py` per contracts/api.md and FR-010 (remove an item entirely, freeing the rack capacity it used)
+- [X] T015 [US1] Add validation guard rails across `app/routers/racks.py` and `app/routers/items.py` so quantity/capacity "cannot be negative" (FR-006) and rack `capacity` "must be a positive integer" are enforced with 422 responses
+- [X] T016 [P] [US1] Build rack list/detail templates in `app/templates/racks.html` showing capacity used/remaining per rack, wired to the `GET`/`POST`/`PATCH /racks` endpoints
+- [X] T017 [P] [US1] Build item add/edit forms in `app/templates/items.html`, including the capacity-warning confirmation flow, wired to the items endpoints
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -87,10 +87,10 @@ number, and quantity (quickstart.md scenarios 4-6).
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Implement `GET /report` in `app/routers/report.py` returning one row per item as `{item_name, rack_number, quantity}` with "no merging across racks" per data-model.md and contracts/api.md
-- [ ] T019 [US2] Write the report query as a single joined query (Item ⨝ Rack) rather than N+1 lookups, to meet SC-002 ("loads within 3 seconds for a warehouse of up to 1,000 tracked items")
-- [ ] T020 [P] [US2] Build the report template in `app/templates/report.html` listing item name, rack number, and quantity, with an empty-state message when no items exist yet (spec Acceptance Scenario 3)
-- [ ] T021 [US2] Wire the report route into `app/main.py`'s navigation alongside the racks/items views
+- [X] T018 [US2] Implement `GET /report` in `app/routers/report.py` returning one row per item as `{item_name, rack_number, quantity}` with "no merging across racks" per data-model.md and contracts/api.md
+- [X] T019 [US2] Write the report query as a single joined query (Item ⨝ Rack) rather than N+1 lookups, to meet SC-002 ("loads within 3 seconds for a warehouse of up to 1,000 tracked items")
+- [X] T020 [P] [US2] Build the report template in `app/templates/report.html` listing item name, rack number, and quantity, with an empty-state message when no items exist yet (spec Acceptance Scenario 3)
+- [X] T021 [US2] Wire the report route into `app/main.py`'s navigation alongside the racks/items views
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

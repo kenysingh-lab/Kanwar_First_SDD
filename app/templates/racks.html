@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Racks — Warehouse Inventory{% endblock %}
+{% block content %}
+<h1>Racks</h1>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Rack Number</th>
+      <th>Capacity</th>
+      <th>Used</th>
+      <th>Remaining</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="racks-body">
+    {% for rack in racks %}
+    <tr data-rack-id="{{ rack.id }}" class="{{ 'rack-full' if rack.remaining_capacity <= 0 else '' }}">
+      <td>{{ rack.rack_number }}</td>
+      <td>
+        <form class="inline-form edit-capacity-form" data-rack-id="{{ rack.id }}">
+          <input type="number" name="capacity" value="{{ rack.capacity }}" min="1" required>
+          <button type="submit">Save</button>
+        </form>
+      </td>
+      <td>{{ rack.used_capacity }}</td>
+      <td>{{ rack.remaining_capacity }}{% if rack.remaining_capacity <= 0 %} <span class="badge badge-warn">full</span>{% endif %}</td>
+      <td></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="empty-state">No racks yet — add one below.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Add a rack</h2>
+<form id="add-rack-form" class="card">
+  <label>
+    Rack number
+    <input type="text" name="rack_number" required>
+  </label>
+  <label>
+    Capacity
+    <input type="number" name="capacity" min="1" required>
+  </label>
+  <button type="submit">Add rack</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById('add-rack-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch('/racks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        rack_number: form.rack_number.value,
+        capacity: Number(form.capacity.value),
+      }),
+    });
+    if (res.ok) {
+      window.location.reload();
+    } else if (res.status === 409) {
+      flash('That rack number already exists.', true);
+    } else {
+      flash('Could not add rack — check the values entered.', true);
+    }
+  });
+
+  document.querySelectorAll('.edit-capacity-form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const rackId = form.dataset.rackId;
+      const res = await fetch(`/racks/${rackId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ capacity: Number(form.capacity.value) }),
+      });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        flash('Could not update capacity.', true);
+      }
+    });
+  });
+</script>
+{% endblock %}
