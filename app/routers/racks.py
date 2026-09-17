@@ -17,10 +17,12 @@ router = APIRouter()
 
 class RackCreate(BaseModel):
     rack_number: str
+    aisle: str = Field(min_length=1)
     capacity: int = Field(gt=0)
 
 
 class RackUpdate(BaseModel):
+    aisle: str | None = Field(default=None, min_length=1)
     capacity: int | None = Field(default=None, gt=0)
 
 
@@ -28,6 +30,7 @@ def serialize_rack(rack: Rack) -> dict:
     return {
         "id": rack.id,
         "rack_number": rack.rack_number,
+        "aisle": rack.aisle,
         "capacity": rack.capacity,
         "used_capacity": rack.used_capacity,
         "remaining_capacity": rack.remaining_capacity,
@@ -44,7 +47,7 @@ def create_rack(payload: RackCreate, db: Session = Depends(get_db), admin=Depend
     existing = db.query(Rack).filter(Rack.rack_number == payload.rack_number).first()
     if existing is not None:
         raise HTTPException(status_code=409, detail="rack_number already exists")
-    rack = Rack(rack_number=payload.rack_number, capacity=payload.capacity)
+    rack = Rack(rack_number=payload.rack_number, aisle=payload.aisle, capacity=payload.capacity)
     db.add(rack)
     db.commit()
     db.refresh(rack)
@@ -61,6 +64,8 @@ def update_rack(
     rack = db.get(Rack, rack_id)
     if rack is None:
         raise HTTPException(status_code=404, detail="Rack not found")
+    if payload.aisle is not None:
+        rack.aisle = payload.aisle
     if payload.capacity is not None:
         rack.capacity = payload.capacity
     db.commit()

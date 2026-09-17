@@ -7,6 +7,7 @@
   <thead>
     <tr>
       <th>Rack Number</th>
+      <th>Aisle</th>
       <th>Capacity</th>
       <th>Used</th>
       <th>Remaining</th>
@@ -17,18 +18,14 @@
     {% for rack in racks %}
     <tr data-rack-id="{{ rack.id }}" class="{{ 'rack-full' if rack.remaining_capacity <= 0 else '' }}">
       <td>{{ rack.rack_number }}</td>
-      <td>
-        <form class="inline-form edit-capacity-form" data-rack-id="{{ rack.id }}">
-          <input type="number" name="capacity" value="{{ rack.capacity }}" min="1" required>
-          <button type="submit">Save</button>
-        </form>
-      </td>
+      <td><input type="text" class="rack-aisle-input" value="{{ rack.aisle }}" required></td>
+      <td><input type="number" class="rack-capacity-input" value="{{ rack.capacity }}" min="1" required></td>
       <td>{{ rack.used_capacity }}</td>
       <td>{{ rack.remaining_capacity }}{% if rack.remaining_capacity <= 0 %} <span class="badge badge-warn">full</span>{% endif %}</td>
-      <td></td>
+      <td><button class="save-rack-btn" data-rack-id="{{ rack.id }}">Save</button></td>
     </tr>
     {% else %}
-    <tr><td colspan="5" class="empty-state">No racks yet — add one below.</td></tr>
+    <tr><td colspan="6" class="empty-state">No racks yet — add one below.</td></tr>
     {% endfor %}
   </tbody>
 </table>
@@ -38,6 +35,10 @@
   <label>
     Rack number
     <input type="text" name="rack_number" required>
+  </label>
+  <label>
+    Aisle
+    <input type="text" name="aisle" required>
   </label>
   <label>
     Capacity
@@ -57,6 +58,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         rack_number: form.rack_number.value,
+        aisle: form.aisle.value,
         capacity: Number(form.capacity.value),
       }),
     });
@@ -69,19 +71,21 @@
     }
   });
 
-  document.querySelectorAll('.edit-capacity-form').forEach((form) => {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const rackId = form.dataset.rackId;
+  document.querySelectorAll('.save-rack-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const row = btn.closest('tr');
+      const rackId = btn.dataset.rackId;
+      const aisle = row.querySelector('.rack-aisle-input').value;
+      const capacity = Number(row.querySelector('.rack-capacity-input').value);
       const res = await fetch(`/racks/${rackId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ capacity: Number(form.capacity.value) }),
+        body: JSON.stringify({ aisle, capacity }),
       });
       if (res.ok) {
         window.location.reload();
       } else {
-        flash('Could not update capacity.', true);
+        flash('Could not update rack.', true);
       }
     });
   });

@@ -17,14 +17,14 @@ router = APIRouter()
 
 def query_report_rows(db: Session) -> list[dict]:
     rows = (
-        db.query(Item.name, Rack.rack_number, Item.quantity)
+        db.query(Item.name, Rack.rack_number, Rack.aisle, Item.quantity)
         .join(Rack, Item.rack_id == Rack.id)
         .order_by(Rack.rack_number, Item.name)
         .all()
     )
     return [
-        {"item_name": name, "rack_number": rack_number, "quantity": quantity}
-        for name, rack_number, quantity in rows
+        {"item_name": name, "rack_number": rack_number, "aisle": aisle, "quantity": quantity}
+        for name, rack_number, aisle, quantity in rows
     ]
 
 

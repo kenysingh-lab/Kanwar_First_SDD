@@ -25,12 +25,14 @@ def _utcnow() -> datetime:
 
 class Rack(Base):
     """A physical storage location. rack_number is unique, required;
-    capacity is required and must be > 0 (data-model.md)."""
+    aisle is required (FR-011); capacity is required and must be > 0
+    (data-model.md)."""
 
     __tablename__ = "racks"
 
     id = Column(Integer, primary_key=True)
     rack_number = Column(String, unique=True, nullable=False)
+    aisle = Column(String, nullable=False)
     capacity = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=_utcnow, nullable=False)
     updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow, nullable=False)

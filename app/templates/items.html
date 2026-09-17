@@ -43,7 +43,7 @@
     Rack
     <select name="rack_id" required>
       {% for rack in racks %}
-      <option value="{{ rack.id }}">{{ rack.rack_number }} ({{ rack.remaining_capacity }} remaining)</option>
+      <option value="{{ rack.id }}">{{ rack.rack_number }} — {{ rack.aisle }} ({{ rack.remaining_capacity }} remaining)</option>
       {% endfor %}
     </select>
   </label>
