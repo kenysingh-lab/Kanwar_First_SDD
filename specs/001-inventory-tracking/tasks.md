@@ -67,7 +67,7 @@ capacity — including warning before an assignment would overflow the rack
 - [ ] T011 [US1] Implement `GET /racks` and `POST /racks` in `app/routers/racks.py` per contracts/api.md (409 if `rack_number` already exists, 422 if `capacity` is not a positive integer)
 - [ ] T012 [US1] Implement `PATCH /racks/{id}` in `app/routers/racks.py` per contracts/api.md, recomputing `used_capacity`/`remaining_capacity` after a capacity edit (404 if rack not found)
 - [ ] T013 [US1] Implement `POST /items` and `PATCH /items/{id}` in `app/routers/items.py` per contracts/api.md, including the capacity-warning soft-block: return 409 with `{"warning": "capacity_exceeded", "remaining_capacity": int}` when an assignment/update would exceed the target rack's remaining capacity, and honor `{"confirm": true}` to force it (FR-005)
-- [ ] T014 [US1] Implement `GET /items` (with optional `rack_id` filter) and `DELETE /items/{id}` in `app/routers/items.py` per contracts/api.md
+- [ ] T014 [US1] Implement `GET /items` (with optional `rack_id` filter) and `DELETE /items/{id}` in `app/routers/items.py` per contracts/api.md and FR-010 (remove an item entirely, freeing the rack capacity it used)
 - [ ] T015 [US1] Add validation guard rails across `app/routers/racks.py` and `app/routers/items.py` so quantity/capacity "cannot be negative" (FR-006) and rack `capacity` "must be a positive integer" are enforced with 422 responses
 - [ ] T016 [P] [US1] Build rack list/detail templates in `app/templates/racks.html` showing capacity used/remaining per rack, wired to the `GET`/`POST`/`PATCH /racks` endpoints
 - [ ] T017 [P] [US1] Build item add/edit forms in `app/templates/items.html`, including the capacity-warning confirmation flow, wired to the items endpoints

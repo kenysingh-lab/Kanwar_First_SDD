@@ -109,6 +109,8 @@ rack number, and quantity for each, matching what was entered.
   up-to-date data).
 - **FR-009**: The system MUST restrict access to inventory data and the
   report to authenticated Admin users.
+- **FR-010**: The system MUST allow the Admin to remove an item entirely
+  (e.g., a discontinued item), freeing the rack capacity it used.
 
 ### Key Entities
 

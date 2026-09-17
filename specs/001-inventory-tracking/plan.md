@@ -20,7 +20,8 @@ machine in the warehouse office and be accessed over the local network.
 **Language/Version**: Python 3.11+
 
 **Primary Dependencies**: FastAPI (web framework), Jinja2 (server-rendered
-templates), Uvicorn (ASGI server), SQLAlchemy (ORM)
+templates), Uvicorn (ASGI server), SQLAlchemy (ORM), `python-multipart`
+(form parsing), `passlib[bcrypt]` (Admin password hashing)
 
 **Storage**: SQLite (single file, no separate database server to run/maintain)
 

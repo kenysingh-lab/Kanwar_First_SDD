@@ -7,7 +7,7 @@ implemented. See [data-model.md](data-model.md) for field details and
 ## Prerequisites
 
 - Python 3.11+
-- `pip install -r requirements.txt` (FastAPI, Uvicorn, SQLAlemy, pytest —
+- `pip install -r requirements.txt` (FastAPI, Uvicorn, SQLAlchemy —
   see research.md for why these were chosen)
 
 ## Setup
