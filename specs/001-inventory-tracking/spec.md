@@ -82,6 +82,9 @@ rack number, aisle, and quantity for each, matching what was entered.
 - What happens when a rack's total capacity is edited after items are already
   assigned to it? The app should recompute remaining space using the new
   capacity and the existing assigned quantity.
+- What happens when the Admin renames a rack's number to one that's already
+  in use by another rack? The rename is rejected (same uniqueness rule as
+  creating a rack, FR-001) rather than silently overwriting the other rack.
 
 ## Requirements *(mandatory)*
 
@@ -89,7 +92,8 @@ rack number, aisle, and quantity for each, matching what was entered.
 
 - **FR-001**: The system MUST allow the Admin to create and edit racks, each
   identified by a unique rack number and a maximum capacity (a count of units
-  it can hold).
+  it can hold). Editing includes changing the rack number itself, subject to
+  the same uniqueness rule as creating a rack.
 - **FR-011**: The system MUST allow the Admin to record which aisle each rack
   belongs to, and to edit that assignment.
 - **FR-002**: The system MUST allow the Admin to create and edit inventory

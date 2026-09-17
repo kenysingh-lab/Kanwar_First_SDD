@@ -28,10 +28,11 @@ returned by the server-rendered UI wrap these same operations.
 - Response `422`: `capacity` not a positive integer, or `aisle` missing/empty
 
 ### `PATCH /racks/{id}`
-- Request: `{ "aisle"?: string, "capacity"?: int }`
+- Request: `{ "rack_number"?: string, "aisle"?: string, "capacity"?: int }`
 - Response `200`: updated rack object (recomputed `used_capacity`/
   `remaining_capacity` per data-model.md)
 - Response `404`: rack not found
+- Response `409`: `rack_number` already in use by another rack
 
 ## Items
 
