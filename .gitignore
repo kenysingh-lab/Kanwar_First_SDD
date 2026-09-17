@@ -1,2 +1,5 @@
 # Claude Code agent folder — may contain local session state/credentials
 .claude/.cc-writes/
+
+# macOS
+.DS_Store
