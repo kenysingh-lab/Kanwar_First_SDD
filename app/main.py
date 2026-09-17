@@ -68,9 +68,19 @@ def racks_page(request: Request, db: Session = Depends(get_db)):
     if admin is None:
         return RedirectResponse("/ui/login")
     all_racks = db.query(Rack).order_by(Rack.rack_number).all()
+    racks_with_items = [
+        {
+            **racks_router.serialize_rack(r),
+            "assigned_items": [
+                {"name": i.name, "quantity": i.quantity}
+                for i in sorted(r.items, key=lambda i: i.name)
+            ],
+        }
+        for r in all_racks
+    ]
     return templates.TemplateResponse(
         "racks.html",
-        {"request": request, "racks": [racks_router.serialize_rack(r) for r in all_racks]},
+        {"request": request, "racks": racks_with_items},
     )
 
 

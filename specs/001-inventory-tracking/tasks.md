@@ -162,9 +162,9 @@ than available and confirm it's rejected with no inventory change.
 **Purpose**: FR-015 — let the Admin see which items are on a rack directly
 from the Racks page, without cross-referencing the Items page
 
-- [ ] T040 Update the `/ui/racks` route in `app/main.py` to also query each rack's items and pass them to the template
-- [ ] T041 [P] Update `app/templates/racks.html`: show each rack's assigned items (name + quantity) under/alongside its row, with a clear empty state when a rack has no items
-- [ ] T042 Manually verify against the running instance: racks with items show them correctly, an empty rack shows an appropriate empty state, and the list updates after adding/removing/dispatching items
+- [X] T040 Update the `/ui/racks` route in `app/main.py` to also query each rack's items and pass them to the template as `assigned_items` (not `items` — that name collides with Python's `dict.items()` method when read as `rack.items` in Jinja on a plain dict, which caused a 500; caught and fixed during T042 verification)
+- [X] T041 [P] Update `app/templates/racks.html`: show each rack's assigned items (name + quantity) under/alongside its row, with a clear empty state when a rack has no items
+- [X] T042 Manually verify against the running instance: racks with items show them correctly, an empty rack shows an appropriate empty state, and the list updates after a dispatch reduces an item's quantity — all verified live
 
 **Checkpoint**: Racks page shows item contents per rack
 

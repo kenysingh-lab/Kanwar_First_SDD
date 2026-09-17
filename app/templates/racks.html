@@ -11,6 +11,7 @@
       <th>Capacity</th>
       <th>Used</th>
       <th>Remaining</th>
+      <th>Items</th>
       <th></th>
     </tr>
   </thead>
@@ -22,10 +23,21 @@
       <td><input type="number" class="rack-capacity-input" value="{{ rack.capacity }}" min="1" required></td>
       <td>{{ rack.used_capacity }}</td>
       <td>{{ rack.remaining_capacity }}{% if rack.remaining_capacity <= 0 %} <span class="badge badge-warn">full</span>{% endif %}</td>
+      <td>
+        {% if rack.assigned_items %}
+        <ul class="item-list">
+          {% for item in rack.assigned_items %}
+          <li>{{ item.name }} ({{ item.quantity }})</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <span class="empty-state">No items</span>
+        {% endif %}
+      </td>
       <td><button class="save-rack-btn" data-rack-id="{{ rack.id }}">Save</button></td>
     </tr>
     {% else %}
-    <tr><td colspan="6" class="empty-state">No racks yet — add one below.</td></tr>
+    <tr><td colspan="7" class="empty-state">No racks yet — add one below.</td></tr>
     {% endfor %}
   </tbody>
 </table>
