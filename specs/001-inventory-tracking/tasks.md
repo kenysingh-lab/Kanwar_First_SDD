@@ -100,9 +100,9 @@ number, and quantity (quickstart.md scenarios 4-6).
 
 **Purpose**: Improvements that affect the whole feature
 
-- [ ] T022 [P] Finalize `requirements.txt` versions and add a `README.md` with setup/run instructions mirroring quickstart.md's Setup/Run sections
-- [ ] T023 [P] Harden auth in `app/auth.py`: session cookies set `httponly`, passwords hashed via `passlib[bcrypt]`, never logged or returned in plaintext (per data-model.md's Admin rules)
-- [ ] T024 Run all six quickstart.md validation scenarios end-to-end against a running instance and fix any discrepancies found
+- [X] T022 [P] Finalize `requirements.txt` versions and add a `README.md` with setup/run instructions mirroring quickstart.md's Setup/Run sections
+- [X] T023 [P] Harden auth in `app/auth.py`: session cookies set `httponly`, passwords hashed via `passlib[bcrypt]`, never logged or returned in plaintext (per data-model.md's Admin rules) — verified `httponly; samesite=lax` on the actual `Set-Cookie` header from a running instance
+- [X] T024 Run all six quickstart.md validation scenarios end-to-end against a running instance and fix any discrepancies found — all 6 passed (see implementation commit notes)
 
 ---
 
