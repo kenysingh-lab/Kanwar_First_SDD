@@ -11,6 +11,7 @@ Represents a physical storage location in the warehouse.
 |---|---|---|
 | `id` | integer, PK | auto-generated |
 | `rack_number` | string | unique, required (FR-001) |
+| `aisle` | string | required (FR-011) |
 | `capacity` | integer | required, must be > 0 (FR-001) |
 | `created_at` | datetime | auto-set on create |
 | `updated_at` | datetime | auto-set on update |

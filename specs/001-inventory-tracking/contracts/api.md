@@ -18,17 +18,17 @@ returned by the server-rendered UI wrap these same operations.
 
 ### `GET /racks`
 - Response `200`: array of
-  `{ id, rack_number, capacity, used_capacity, remaining_capacity }`
+  `{ id, rack_number, aisle, capacity, used_capacity, remaining_capacity }`
   (Supports User Story 1 — Admin sees remaining space per rack.)
 
 ### `POST /racks`
-- Request: `{ "rack_number": string, "capacity": int }`
+- Request: `{ "rack_number": string, "aisle": string, "capacity": int }`
 - Response `201`: created rack object
 - Response `409`: `rack_number` already exists
-- Response `422`: `capacity` not a positive integer
+- Response `422`: `capacity` not a positive integer, or `aisle` missing/empty
 
 ### `PATCH /racks/{id}`
-- Request: `{ "capacity"?: int }`
+- Request: `{ "aisle"?: string, "capacity"?: int }`
 - Response `200`: updated rack object (recomputed `used_capacity`/
   `remaining_capacity` per data-model.md)
 - Response `404`: rack not found
@@ -63,8 +63,8 @@ returned by the server-rendered UI wrap these same operations.
 ## Report
 
 ### `GET /report`
-- Response `200`: array of `{ item_name, rack_number, quantity }`, one row
-  per item (per data-model.md — no merging across racks)
+- Response `200`: array of `{ item_name, rack_number, aisle, quantity }`,
+  one row per item (per data-model.md — no merging across racks)
 - Supports User Story 2 in full: this is the entire contract needed for the
   report view (SC-002: MUST respond fast enough to render within 3s for up
   to 1,000 items).

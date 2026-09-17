@@ -106,6 +106,23 @@ number, and quantity (quickstart.md scenarios 4-6).
 
 ---
 
+## Phase 6: Add Aisle to Racks (Change Request)
+
+**Purpose**: FR-011 — record which aisle each rack belongs to, and surface it
+in the report (FR-007/SC-002 updates)
+
+- [ ] T025 Add `aisle` (string, required) to the `Rack` model in `app/models.py` per the updated data-model.md
+- [ ] T026 Add `aisle` to `RackCreate`/`RackUpdate` schemas and `serialize_rack` in `app/routers/racks.py`, per the updated contracts/api.md (422 if `aisle` missing/empty on create)
+- [ ] T027 Add `aisle` to the report query and serialized rows in `app/routers/report.py` per the updated contracts/api.md
+- [ ] T028 [P] Update `app/templates/racks.html`: add an `aisle` input to the add-rack form, an `aisle` column to the racks table, and allow editing it alongside capacity
+- [ ] T029 [P] Update `app/templates/report.html`: add an `aisle` column
+- [ ] T030 [P] Update `app/templates/items.html`: show each rack's aisle in the rack-selection dropdown, to help the Admin pick the right rack
+- [ ] T031 Recreate the local SQLite schema to pick up the new column (no migrations framework in scope — see research.md) and re-run the quickstart.md scenarios to confirm the report's new `aisle` column renders correctly
+
+**Checkpoint**: Racks have an aisle, visible when creating/editing a rack and in the report
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies

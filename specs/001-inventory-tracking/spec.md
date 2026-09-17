@@ -52,13 +52,13 @@ why it is P2.
 
 **Independent Test**: Can be fully tested by populating a few items across
 multiple racks (via User Story 1) and confirming the report lists item name,
-rack number, and quantity for each, matching what was entered.
+rack number, aisle, and quantity for each, matching what was entered.
 
 **Acceptance Scenarios**:
 
 1. **Given** inventory items have been assigned to racks with quantities,
    **When** the Admin opens the report, **Then** every item appears as a row
-   showing its name, rack number, and quantity.
+   showing its name, rack number, aisle, and quantity.
 2. **Given** an item's quantity is updated, **When** the Admin re-opens the
    report, **Then** the report reflects the updated quantity without further
    manual action.
@@ -90,6 +90,8 @@ rack number, and quantity for each, matching what was entered.
 - **FR-001**: The system MUST allow the Admin to create and edit racks, each
   identified by a unique rack number and a maximum capacity (a count of units
   it can hold).
+- **FR-011**: The system MUST allow the Admin to record which aisle each rack
+  belongs to, and to edit that assignment.
 - **FR-002**: The system MUST allow the Admin to create and edit inventory
   items, each with a name, a quantity, and an assigned rack.
 - **FR-003**: The system MUST allow the Admin to update an item's quantity
@@ -102,7 +104,7 @@ rack number, and quantity for each, matching what was entered.
 - **FR-006**: The system MUST prevent item quantities and rack used-capacity
   from going negative.
 - **FR-007**: The system MUST provide a report view listing every inventory
-  item with its item name, rack number, and quantity, with one row per
+  item with its item name, rack number, aisle, and quantity, with one row per
   item-and-rack combination.
 - **FR-008**: The report MUST reflect the current state of the inventory at
   the time it is viewed (no manual refresh/export step required to see
@@ -115,8 +117,8 @@ rack number, and quantity for each, matching what was entered.
 ### Key Entities
 
 - **Rack**: A physical storage location in the warehouse. Key attributes:
-  rack number (unique identifier), maximum capacity, and current used
-  capacity (derived from the items assigned to it).
+  rack number (unique identifier), the aisle it belongs to, maximum capacity,
+  and current used capacity (derived from the items assigned to it).
 - **Item**: A stock entry stored on a rack. Key attributes: item name,
   quantity, and the rack it is assigned to.
 - **Admin**: The authenticated user who manages racks and items and views the
@@ -128,9 +130,9 @@ rack number, and quantity for each, matching what was entered.
 
 - **SC-001**: An Admin can determine whether a given rack has available
   space in under 5 seconds by viewing the app, with no manual counting.
-- **SC-002**: The inventory report displays item name, rack number, and
-  quantity for all items, and loads within 3 seconds for a warehouse of up to
-  1,000 tracked items.
+- **SC-002**: The inventory report displays item name, rack number, aisle,
+  and quantity for all items, and loads within 3 seconds for a warehouse of
+  up to 1,000 tracked items.
 - **SC-003**: 100% of quantity or rack-assignment changes made by the Admin
   are reflected the next time the report or rack view is opened.
 - **SC-004**: An Admin can identify which racks are at or near full capacity
@@ -149,3 +151,7 @@ rack number, and quantity for each, matching what was entered.
 - Items are counted in whole units (no fractional/partial quantities).
 - The warehouse is small enough for one Admin to manage without needing
   multi-user concurrent-editing controls in this version.
+- Aisle is a simple label recorded on each rack (e.g., "Aisle 3"), not a
+  separately managed entity with its own capacity or attributes — there is
+  no requirement yet for aisle-level rollups, listing, or constraints beyond
+  recording which aisle a rack is in.
