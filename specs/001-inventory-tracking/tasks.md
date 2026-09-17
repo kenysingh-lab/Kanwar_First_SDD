@@ -155,6 +155,19 @@ than available and confirm it's rejected with no inventory change.
 
 **Checkpoint**: User Story 3 is fully functional and independently testable
 
+---
+
+## Phase 9: Show Items on the Racks Page (Change Request)
+
+**Purpose**: FR-015 — let the Admin see which items are on a rack directly
+from the Racks page, without cross-referencing the Items page
+
+- [ ] T040 Update the `/ui/racks` route in `app/main.py` to also query each rack's items and pass them to the template
+- [ ] T041 [P] Update `app/templates/racks.html`: show each rack's assigned items (name + quantity) under/alongside its row, with a clear empty state when a rack has no items
+- [ ] T042 Manually verify against the running instance: racks with items show them correctly, an empty rack shows an appropriate empty state, and the list updates after adding/removing/dispatching items
+
+**Checkpoint**: Racks page shows item contents per rack
+
 **Checkpoint**: Racks have an aisle, visible when creating/editing a rack and in the report
 
 ---

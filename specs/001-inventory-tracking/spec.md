@@ -36,6 +36,10 @@ correctly shows remaining space — without any reporting UI built yet.
 3. **Given** a rack that is at full capacity, **When** the Admin attempts to
    assign an additional item to it, **Then** the app warns the Admin that the
    rack has no remaining space before the assignment is confirmed.
+4. **Given** items are assigned to a rack, **When** the Admin views the Racks
+   page, **Then** each rack shows which items (and their quantities) are
+   currently on it, so the Admin doesn't have to cross-reference the Items
+   page to know what's where.
 
 ---
 
@@ -162,6 +166,8 @@ rejected with no change to inventory.
 - **FR-014**: The system MUST reject a dispatch and display the error "Item
   out of quantity" when the requested quantity exceeds the item's currently
   available quantity, making no change to any inventory data.
+- **FR-015**: The system MUST show, on the Racks page, which items (name and
+  quantity) are currently assigned to each rack.
 
 ### Key Entities
 
