@@ -132,6 +132,29 @@ the Racks page, not just set it at creation
 
 **Checkpoint**: Rack number is editable from the Racks page, with the same uniqueness guarantee as creation
 
+---
+
+## Phase 8: Dispatch Items for Delivery (User Story 3, Priority: P3)
+
+**Goal**: Admin can dispatch a quantity of an item out of the warehouse from
+a dedicated Dispatch page; the item's quantity drops accordingly and the
+Inventory Report reflects it immediately; over-quantity dispatches are
+rejected with "Item out of quantity".
+
+**Independent Test**: Dispatch a valid quantity of an existing item and
+confirm its quantity drops and the report updates; attempt to dispatch more
+than available and confirm it's rejected with no inventory change.
+
+### Implementation for User Story 3
+
+- [ ] T035 Create `app/routers/dispatch.py` with `POST /dispatch` per contracts/api.md: validate `quantity` is a positive integer and `item_id` exists (422 otherwise); if `quantity` exceeds the item's current `quantity`, return 409 with `{"error": "Item out of quantity"}` (FR-014) and make no changes; otherwise subtract `quantity` from the item and return the updated item (FR-013)
+- [ ] T036 Register the dispatch router in `app/main.py` and add a `GET /ui/dispatch` page route (auth-gated like the other `/ui/*` pages) that lists current items for the dropdown
+- [ ] T037 [P] Build `app/templates/dispatch.html`: an item dropdown (name + rack number + available quantity, matching the items page's dropdown style), a quantity input, and a submit button wired via fetch to `POST /dispatch`, showing the exact error text "Item out of quantity" on a 409
+- [ ] T038 [P] Add a "Dispatch" link to the nav in `app/templates/base.html`, alongside Racks/Items/Report
+- [ ] T039 Manually verify against the running instance: dispatching a valid quantity reduces the item and shows up in `/report`; dispatching more than available is rejected with "Item out of quantity" and the report is unchanged; dispatching the exact remaining quantity zeroes the item out and frees its rack's capacity
+
+**Checkpoint**: User Story 3 is fully functional and independently testable
+
 **Checkpoint**: Racks have an aisle, visible when creating/editing a rack and in the report
 
 ---

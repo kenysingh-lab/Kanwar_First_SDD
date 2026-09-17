@@ -53,6 +53,12 @@ Represents a stock entry stored on a rack.
 - The same `name` may appear in multiple `Item` rows across different racks
   (edge case in spec: overflow item split across racks) — each row is
   tracked independently; no merging/deduplication by name.
+- A dispatch (FR-012/FR-013) decreases `quantity` by the dispatched amount,
+  subject to the same "cannot be negative" rule (FR-006): a dispatch request
+  exceeding the current `quantity` MUST be rejected outright (FR-014, "Item
+  out of quantity"), not partially applied or allowed to go negative. Unlike
+  the capacity-warning soft gate above, this has no confirm-to-override path
+  — you cannot dispatch stock that doesn't exist.
 
 ## Admin
 

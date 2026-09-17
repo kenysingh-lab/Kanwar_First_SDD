@@ -61,6 +61,19 @@ returned by the server-rendered UI wrap these same operations.
 - Response `204`: item removed
 - Response `404`: item not found
 
+## Dispatch
+
+### `POST /dispatch`
+- Request: `{ "item_id": int, "quantity": int }`
+- Response `200`: updated item object (same shape as items' `serialize_item`:
+  `{ id, name, quantity, rack_id }`), reflecting the reduced quantity
+- Response `409`: requested `quantity` exceeds the item's currently
+  available quantity — response body `{ "error": "Item out of quantity" }`
+  (FR-014). No confirm-to-override; unlike the capacity-warning soft-block
+  elsewhere, this is a hard rejection.
+- Response `422`: `quantity` not a positive integer, or `item_id` does not
+  exist
+
 ## Report
 
 ### `GET /report`

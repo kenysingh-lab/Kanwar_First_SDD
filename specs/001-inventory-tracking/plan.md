@@ -86,8 +86,9 @@ app/
 ├── routers/
 │   ├── racks.py         # Rack create/edit/list + capacity calculations
 │   ├── items.py         # Item create/edit/quantity updates
-│   └── report.py        # Inventory report (item name, rack number, quantity)
-├── templates/           # Jinja2 templates (racks, items, report, login)
+│   ├── report.py        # Inventory report (item name, rack number, quantity)
+│   └── dispatch.py      # Dispatch an item out of the warehouse
+├── templates/           # Jinja2 templates (racks, items, report, dispatch, login)
 └── static/              # CSS/minimal JS
 ```
 

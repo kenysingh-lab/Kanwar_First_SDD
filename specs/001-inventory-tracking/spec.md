@@ -67,6 +67,37 @@ rack number, aisle, and quantity for each, matching what was entered.
 
 ---
 
+### User Story 3 - Dispatch Items for Delivery (Priority: P3)
+
+As the Admin, I want to dispatch items out of the warehouse, so that a
+trucker can deliver them to my customer and the inventory reflects what's
+actually still on the shelf.
+
+**Why this priority**: This builds on User Story 1's inventory data and
+depends on it existing first, which is why it's P3. It's the action that
+actually moves goods out the door, so it matters once there's inventory to
+dispatch, but tracking and reporting (P1/P2) have to exist before it does.
+
+**Independent Test**: Can be fully tested by dispatching a valid quantity of
+an existing item and confirming its recorded quantity drops accordingly, and
+by attempting to dispatch more than is available and confirming it's
+rejected with no change to inventory.
+
+**Acceptance Scenarios**:
+
+1. **Given** an item with available quantity, **When** the Admin dispatches
+   a quantity at or below what's available, **Then** the item's quantity is
+   reduced by that amount and the change is reflected in the Inventory
+   Report.
+2. **Given** an item with limited quantity, **When** the Admin attempts to
+   dispatch more than is currently available, **Then** the app shows the
+   error "Item out of quantity" and does not change any inventory data.
+3. **Given** a successful dispatch, **When** the Admin opens the Dispatch
+   page again, **Then** the item selection reflects the item's updated
+   available quantity.
+
+---
+
 ### Edge Cases
 
 - What happens when the Admin tries to assign an item to a rack that is
@@ -85,6 +116,12 @@ rack number, aisle, and quantity for each, matching what was entered.
 - What happens when the Admin renames a rack's number to one that's already
   in use by another rack? The rename is rejected (same uniqueness rule as
   creating a rack, FR-001) rather than silently overwriting the other rack.
+- What happens when the Admin tries to dispatch more of an item than is
+  currently available? The dispatch is rejected with the error "Item out of
+  quantity" and no inventory data changes (no partial dispatch).
+- What happens when the Admin dispatches exactly an item's remaining
+  quantity? The item's quantity becomes zero (per the existing "quantity
+  reduced to zero" edge case above) and the rack capacity it used is freed.
 
 ## Requirements *(mandatory)*
 
@@ -117,6 +154,14 @@ rack number, aisle, and quantity for each, matching what was entered.
   report to authenticated Admin users.
 - **FR-010**: The system MUST allow the Admin to remove an item entirely
   (e.g., a discontinued item), freeing the rack capacity it used.
+- **FR-012**: The system MUST provide a Dispatch page where the Admin
+  selects an item and a quantity to dispatch out of the warehouse.
+- **FR-013**: The system MUST subtract the dispatched quantity from the
+  selected item's quantity upon a successful dispatch, and this change MUST
+  be reflected in the Inventory Report (FR-007/FR-008).
+- **FR-014**: The system MUST reject a dispatch and display the error "Item
+  out of quantity" when the requested quantity exceeds the item's currently
+  available quantity, making no change to any inventory data.
 
 ### Key Entities
 
@@ -142,6 +187,10 @@ rack number, aisle, and quantity for each, matching what was entered.
 - **SC-004**: An Admin can identify which racks are at or near full capacity
   without physically inspecting the rack, for 100% of racks recorded in the
   system.
+- **SC-005**: 100% of successful dispatches are reflected in the item's
+  quantity and the Inventory Report immediately, with no separate refresh
+  step, and 100% of over-quantity dispatch attempts are rejected with no
+  change to inventory data.
 
 ## Assumptions
 
@@ -159,3 +208,13 @@ rack number, aisle, and quantity for each, matching what was entered.
   separately managed entity with its own capacity or attributes — there is
   no requirement yet for aisle-level rollups, listing, or constraints beyond
   recording which aisle a rack is in.
+- Dispatch is a one-time inventory-reducing action; this version does not
+  keep a persisted history/log of past dispatches — only the resulting
+  change to the item's quantity is retained. A dispatch history/audit trail
+  can be added later if that becomes a requirement.
+- Dispatch does not capture customer or trucker identifying details in this
+  version — only which item and how much quantity left the warehouse.
+- Since the same item name can exist as separate rows across different
+  racks (per the earlier "same item name across racks" edge case), the
+  Dispatch page's item selection operates at that same per-rack row
+  granularity, not by item name alone.
